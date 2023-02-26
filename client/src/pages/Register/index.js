@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import Button from '../../components/Button'
 
 function Register() {
   const [user, setUser] = React.useState({
@@ -37,9 +38,15 @@ function Register() {
             value={user.password}
             onChange={(e) => setUser({ ...user, password: e.target.value })}
           />
-          <button className='primary-contained-btn' onClick={register}>
-            Register
-          </button>
+          <Button
+            title='Register'
+            onClick={register}
+            disabled={
+              user.name.length < 3 ||
+              user.email.length < 3 ||
+              user.password.length < 3
+            }
+          />
           <Link to='/login' className='text-center text-primary underline'>
             Already have an account? Login
           </Link>
