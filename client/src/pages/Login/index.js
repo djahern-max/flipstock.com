@@ -1,5 +1,6 @@
 import React from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+// import { Link, useNavigate } from 'react-router-dom'
+import { LoginUser } from '../../apicalls/users'
 import Button from '../../components/Button'
 
 function Login() {
@@ -8,8 +9,13 @@ function Login() {
     password: '',
   })
 
-  const login = () => {
-    console.log(user)
+  const login = async () => {
+    try {
+      const response = await LoginUser(user)
+      alert(response.messsage)
+    } catch (error) {
+      alert(error.message)
+    }
   }
   return (
     <div className='flex justify-center h-screen items-center bg-primary'>

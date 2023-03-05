@@ -1,5 +1,6 @@
 import React from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
+import { RegisterUser } from '../../apicalls/users'
 import Button from '../../components/Button'
 
 function Register() {
@@ -9,9 +10,16 @@ function Register() {
     password: '',
   })
 
-  const register = () => {
-    console.log(user)
+  const register = async () => {
+    try {
+      const response = await RegisterUser(user)
+      console.log(response)
+      alert(response.messsage)
+    } catch (error) {
+      console.log(error)
+    }
   }
+
   return (
     <div className='flex justify-center h-screen items-center bg-primary'>
       <div className='bg-white p-5 w-[450px]'>

@@ -1,0 +1,29 @@
+{
+  "name": "flipstock.com",
+  "version": "1.0.0",
+  "description": "Stock Market Strategy Communication Tool",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/djahern-max/flipstock.com.git"
+  },
+  "author": "Daniel J Ahern",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/djahern-max/flipstock.com/issues"
+  },
+  "homepage": "https://github.com/djahern-max/flipstock.com#readme",
+  "dependencies": {
+    "bcrypt": "^5.1.0",
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.0",
+    "mongoose": "^6.10.0",
+    "nodemon": "^2.0.21"
+  }
+}
