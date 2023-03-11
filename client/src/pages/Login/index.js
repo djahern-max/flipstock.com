@@ -1,11 +1,13 @@
 import React from 'react'
-import { useNavigate } from 'react-router-dom'
+// import { useNavigate } from 'react-router-dom'
 import { LoginUser } from '../../apicalls/users'
 import { toast } from 'react-hot-toast'
 import Button from '../../components/Button'
+import { useDispatch } from 'react-redux'
+import { ShowLoading, HideLoading } from '../../redux/loadersSlice'
 
 function Login() {
-  const navigate = useNavigate()
+  const dispatch = useDispatch()
   const [user, setUser] = React.useState({
     email: '',
     password: '',
@@ -13,16 +15,18 @@ function Login() {
 
   const login = async () => {
     try {
+      dispatch(ShowLoading())
       const response = await LoginUser(user)
       if (response.success) {
         localStorage.setItem('token', response.data)
         window.location.href = '/'
-        navigate('/')
         toast.success(response.message)
       } else {
         toast.error(response.message)
       }
+      dispatch(HideLoading())
     } catch (error) {
+      dispatch(HideLoading())
       toast.error(error.message)
     }
   }
