@@ -1,9 +1,11 @@
 import React from 'react'
-// import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { LoginUser } from '../../apicalls/users'
+import { toast } from 'react-hot-toast'
 import Button from '../../components/Button'
 
 function Login() {
+  const navigate = useNavigate()
   const [user, setUser] = React.useState({
     email: '',
     password: '',
@@ -12,9 +14,16 @@ function Login() {
   const login = async () => {
     try {
       const response = await LoginUser(user)
-      alert(response.messsage)
+      if (response.success) {
+        localStorage.setItem('token', response.data)
+        window.location.href = '/'
+        navigate('/')
+        toast.success(response.message)
+      } else {
+        toast.error(response.message)
+      }
     } catch (error) {
-      alert(error.message)
+      toast.error(error.message)
     }
   }
   return (
