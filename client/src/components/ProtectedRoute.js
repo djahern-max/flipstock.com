@@ -4,24 +4,35 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { GetUser } from '../apicalls/users'
 import { SetCurrentUser } from '../redux/usersSlice'
+import { HideLoading, ShowLoading } from '../redux/loadersSlice'
 
 function ProtectedRoute({ children }) {
   const { currentUser } = useSelector((state) => state.usersReducer)
   const dispatch = useDispatch()
+  // const [user, setUser] = React.useState(null)
+
   const navigate = useNavigate()
   const getUser = async () => {
     try {
+      dispatch(ShowLoading())
       const response = await GetUser()
       if (response.success) {
         dispatch(SetCurrentUser(response.data))
         toast.success(response.message)
       } else {
+        localStorage.removeItem('token')
+        navigate('/login')
         toast.error(response.message)
       }
+      dispatch(HideLoading())
     } catch (error) {
+      localStorage.removeItem('token')
+      navigate('/login')
+      dispatch(HideLoading())
       toast.error(error.message)
     }
   }
+
   useEffect(() => {
     if (localStorage.getItem('token')) {
       getUser()
@@ -47,18 +58,9 @@ function ProtectedRoute({ children }) {
             <i className='ri-logout-circle-r-line ml-5 cursor-pointer'></i>
           </div>
         </div>
-        {/* <div className='mt-5 overflow-scroll h-[85vh]'>{children}</div> */}
+        <div className='mt-5 overflow-scroll h-[85vh]'>{children}</div>
       </div>
     )
   )
-  // return (
-  //   user && (
-  //     <div>
-  //       {user.name}
-  //       {user.email}
-  //       {children}
-  //     </div>
-  //   )
-  // )
 }
 export default ProtectedRoute
