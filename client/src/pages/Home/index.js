@@ -27,7 +27,7 @@ function Home() {
     <div>
       <div className='flex justify-between'>
         <h1 className='text-primary uppercase text-2xl font-bold'>
-          Welcome {currentUser.name} !
+          Welcome {currentUser.name}!
         </h1>
       </div>
 
