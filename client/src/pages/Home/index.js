@@ -29,6 +29,12 @@ function Home() {
         <h1 className='text-primary uppercase text-2xl font-bold'>
           Welcome {currentUser.name}!
         </h1>
+
+        <Button
+          title='Add Blog'
+          variant='primary-outlined'
+          onClick={() => navigate('/add-blog')}
+        />
       </div>
 
       <div className='grid lg:grid-cols-2 xl:grid-cols-2 gap-5 mt-5 sm:grid-cols-1 xs:grid-cols-1'></div>

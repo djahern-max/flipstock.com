@@ -6,6 +6,7 @@ import { Toaster } from 'react-hot-toast'
 import ProtectedRoute from './components/ProtectedRoute'
 import { useSelector } from 'react-redux'
 import Loader from './components/Loader'
+import AddEditBlog from './pages/AddEditBlog'
 
 function App() {
   const { loading } = useSelector((state) => state.loadersReducer)
@@ -20,6 +21,23 @@ function App() {
             element={
               <ProtectedRoute>
                 <Home />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path='/add-blog'
+            element={
+              <ProtectedRoute>
+                <AddEditBlog />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path='/edit-blog/:id'
+            element={
+              <ProtectedRoute>
+                <AddEditBlog />
               </ProtectedRoute>
             }
           />
