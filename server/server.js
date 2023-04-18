@@ -1,12 +1,14 @@
 const express = require('express')
 const mongoose = require('mongoose')
-const app = express()
 mongoose.set('strictQuery', true)
+const app = express()
 const usersRoute = require('./routes/usersRoute')
+const blogsRoute = require('./routes/blogsRoute')
 
 app.use(express.json())
 
 app.use('/api/users', usersRoute)
+app.use('/api/blogs', blogsRoute)
 
 require('dotenv').config()
 const dbConfig = require('./config/dbConfig')
