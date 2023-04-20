@@ -1,7 +1,7 @@
 import React from 'react'
 import { Editor } from 'react-draft-wysiwyg'
 import './../../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
-import { EditorState, convertToRaw } from 'draft-js'
+import { EditorState, convertToRaw, convertFromRaw } from 'draft-js'
 import Button from '../../components/Button'
 import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-hot-toast'
@@ -28,8 +28,9 @@ function AddEditBlog() {
       dispatch(ShowLoading())
       const response = await AddNewBlog({
         ...blog,
-        content: JSON.stringify(blog.content.getCurrentContent()),
+        content: JSON.stringify(convertToRaw(blog.content.getCurrentContent())),
         user: currentUser._id,
+        _id: params.id,
       })
       if (response.success) {
         toast.success(response.message)
