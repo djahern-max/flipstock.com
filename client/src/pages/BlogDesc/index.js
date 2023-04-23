@@ -5,7 +5,7 @@ import Button from '../../components/Button'
 import { toast } from 'react-hot-toast'
 import { HideLoading, ShowLoading } from '../../redux/loadersSlice'
 import { GetBlogById } from '../../apicalls/blogs'
-import ReactHtmlParser from 'react-html-parser'
+// import ReactHtmlParser from 'react-html-parser'
 import draftToHtml from 'draftjs-to-html'
 
 function BlogDescription() {
@@ -41,7 +41,7 @@ function BlogDescription() {
       <hr />
       <h1>{blog?.description}</h1>
       {/* <div>{ReactHtmlParser(draftToHtml(JSON.parse(blog?.content)))}</div> */}
-      <h1>{blog?.content}</h1>
+      {/* <h1>{blog?.content}</h1> */}
 
       <hr />
     </div>

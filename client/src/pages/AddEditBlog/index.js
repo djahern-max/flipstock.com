@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Editor } from 'react-draft-wysiwyg'
 import './../../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
 import { EditorState, convertToRaw, convertFromRaw } from 'draft-js'
@@ -7,7 +7,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-hot-toast'
 import { HideLoading, ShowLoading } from '../../redux/loadersSlice'
 import { useNavigate, useParams } from 'react-router-dom'
-import { AddNewBlog } from '../../apicalls/blogs'
+import { AddNewBlog, GetBlogById, UpdateBlog } from '../../apicalls/blogs'
+import draftToHtml from 'draftjs-to-html'
 
 function AddEditBlog() {
   const params = useParams()
@@ -24,24 +25,37 @@ function AddEditBlog() {
   })
 
   const onSave = async () => {
+    blog.content = blog.content.getCurrentContent()
+    blog.content = JSON.stringify(convertToRaw(blog.content))
+    console.log(blog)
+  }
+
+  const getData = async () => {
     try {
       dispatch(ShowLoading())
-      const response = await AddNewBlog({
-        ...blog,
-        content: JSON.stringify(convertToRaw(blog.content.getCurrentContent())),
-        user: currentUser._id,
-        _id: params.id,
-      })
+      const response = await GetBlogById(params.id)
       if (response.success) {
-        toast.success(response.message)
-        navigate('/')
+        setBlog({
+          ...response.data,
+          content: EditorState.createWithContent(
+            convertFromRaw(JSON.parse(response.data.content))
+          ),
+        })
       } else {
         toast.error(response.message)
       }
       dispatch(HideLoading())
-      toast.error(response.message)
-    } catch (error) {}
+    } catch (error) {
+      dispatch(HideLoading())
+      toast.error(error.message)
+    }
   }
+
+  useEffect(() => {
+    if (params.id) {
+      getData()
+    }
+  }, [])
 
   return (
     <div>
