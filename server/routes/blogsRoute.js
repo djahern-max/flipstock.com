@@ -1,6 +1,9 @@
 const router = require('express').Router()
 const Blog = require('../models/blogsModel')
 const authMiddleware = require('../middlewares/authMiddleware')
+// const Like = require("../models/likesModel");
+// const Comment = require("../models/commentsModel");
+// const Share = require("../models/sharesModel");
 
 // add new blog
 router.post('/add-blog', authMiddleware, async (req, res) => {
@@ -44,6 +47,38 @@ router.get('/get-blog-by-id/:id', async (req, res) => {
     res.send({
       message: 'Blog fetched successfully',
       data: blog,
+      success: true,
+    })
+  } catch (error) {
+    res.send({
+      error: error.message,
+      success: false,
+    })
+  }
+})
+
+// update blog
+router.put('/update-blog/:id', authMiddleware, async (req, res) => {
+  try {
+    await Blog.findByIdAndUpdate(req.params.id, req.body)
+    res.send({
+      message: 'Blog updated successfully',
+      success: true,
+    })
+  } catch (error) {
+    res.send({
+      error: error.message,
+      success: false,
+    })
+  }
+})
+
+// delete blog
+router.delete('/delete-blog/:id', authMiddleware, async (req, res) => {
+  try {
+    await Blog.findByIdAndDelete(req.params.id)
+    res.send({
+      message: 'Blog deleted successfully',
       success: true,
     })
   } catch (error) {

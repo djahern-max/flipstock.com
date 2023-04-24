@@ -24,10 +24,46 @@ function AddEditBlog() {
     canLike: false,
   })
 
+  // const onSave = async () => {
+  //   blog.content = blog.content.getCurrentContent()
+  //   blog.content = JSON.stringify(convertToRaw(blog.content))
+  //   blog.user = currentUser._id
+  //   console.log(blog)
+  // }
+
   const onSave = async () => {
-    blog.content = blog.content.getCurrentContent()
-    blog.content = JSON.stringify(convertToRaw(blog.content))
-    console.log(blog)
+    try {
+      dispatch(ShowLoading())
+      let response = null
+      if (params.id) {
+        response = await UpdateBlog({
+          ...blog,
+          content: JSON.stringify(
+            convertToRaw(blog.content.getCurrentContent())
+          ),
+          user: currentUser._id,
+          _id: params.id,
+        })
+      } else {
+        response = await AddNewBlog({
+          ...blog,
+          content: JSON.stringify(
+            convertToRaw(blog.content.getCurrentContent())
+          ),
+          user: currentUser._id,
+        })
+      }
+      if (response.success) {
+        toast.success(response.message)
+        navigate('/')
+      } else {
+        toast.error(response.message)
+      }
+      dispatch(HideLoading())
+    } catch (error) {
+      dispatch(HideLoading())
+      toast.error(error.message)
+    }
   }
 
   const getData = async () => {
@@ -60,7 +96,9 @@ function AddEditBlog() {
   return (
     <div>
       <div className='flex justify-between'>
-        <h1 className='text-primary uppercase text-2xl font-bold'>Add Blog</h1>
+        <h1 className='text-primary uppercase text-2xl font-bold'>
+          {params.id ? 'Edit Blog' : 'Add New Blog'}
+        </h1>
       </div>
       <div className='flex flex-col gap-5 mt-5'>
         <input
