@@ -55,7 +55,13 @@ function ProtectedRoute({ children }) {
               {currentUser.name}
             </h1>
             <i className='ri-notification-line cursor-pointer'></i>
-            <i className='ri-logout-circle-r-line ml-5 cursor-pointer'></i>
+            <i
+              className='ri-logout-circle-r-line ml-5 cursor-pointer'
+              onClick={() => {
+                localStorage.removeItem('token')
+                navigate('/login')
+              }}
+            ></i>
           </div>
         </div>
         <div className='mt-5 overflow-scroll h-[85vh]'>{children}</div>

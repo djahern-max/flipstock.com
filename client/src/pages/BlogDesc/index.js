@@ -8,8 +8,15 @@ import { DeleteBlog, GetBlogById } from '../../apicalls/blogs'
 import ReactHtmlParser from 'react-html-parser'
 import draftToHtml from 'draftjs-to-html'
 import moment from 'moment'
+import {
+  LikeBlog,
+  GetAllLikesOfBlog,
+  UnlikeBlog,
+} from '../../apicalls/blogActions'
 
 function BlogDescription() {
+  const [isAlreadyLiked, setIsAlreadyLiked] = useState(false)
+  const [likes = [], setLikes = []] = useState([])
   const [blog, setBlog] = useState(null)
   const { currentUser } = useSelector((state) => state.usersReducer)
   // console.log(currentUser)
@@ -38,8 +45,45 @@ function BlogDescription() {
     try {
       dispatch(ShowLoading())
       const response = await GetBlogById(id)
+      const likesResponse = await GetAllLikesOfBlog(id)
+      if (likesResponse.success) {
+        setLikes(likesResponse.data)
+        const isLiked = likesResponse.data.find(
+          (like) => like.user._id === currentUser._id
+        )
+        setIsAlreadyLiked(isLiked)
+      }
+
       if (response.success) {
         setBlog(response.data)
+      } else {
+        toast.error(response.message)
+      }
+      dispatch(HideLoading())
+    } catch (error) {
+      dispatch(HideLoading())
+      toast.error(error.message)
+    }
+  }
+
+  const likeOrUnlike = async () => {
+    try {
+      dispatch(ShowLoading())
+      let response = null
+      if (isAlreadyLiked) {
+        response = await UnlikeBlog({
+          blog: blog?._id,
+          user: currentUser._id,
+        })
+      } else {
+        response = await LikeBlog({
+          blog: blog?._id,
+          user: currentUser._id,
+        })
+      }
+      if (response.success) {
+        getData()
+        setIsAlreadyLiked(!isAlreadyLiked)
       } else {
         toast.error(response.message)
       }
@@ -83,15 +127,21 @@ function BlogDescription() {
             <h1>Posted: {moment(blog.createdAt).fromNow()}</h1>
           </div>
           <div className='flex gap-5 items-center'>
-            <div className='flex gap-1 items-center'>
-              <i className='ri-heart-line'></i>
+            <div
+              className='flex gap-1 items-center cursor-pointer'
+              onClick={likeOrUnlike}
+            >
+              <i
+                className='ri-heart-fill'
+                style={{ color: isAlreadyLiked ? 'red' : 'gray' }}
+              ></i>
               <span>{blog.likesCount}</span>
             </div>
-            <div className='flex gap-1 items-center'>
+            <div className='flex gap-1 items-center cursor-pointer'>
               <i class='ri-chat-1-line'></i>
               <span>{blog.commentsCount}</span>
             </div>
-            <div className='flex gap-1 items-center'>
+            <div className='flex gap-1 items-center cursor-pointer'>
               <i class='ri-share-forward-line'></i>
               <span>{blog.sharesCount}</span>
             </div>

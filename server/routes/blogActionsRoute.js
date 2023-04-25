@@ -19,12 +19,56 @@ router.post('/like-blog', authMiddleware, async (req, res) => {
     })
 
     // add notification to notifications collection
-    const newNotification = new Notification(req.body.notificationPayload)
-    await newNotification.save()
+    // const newNotification = new Notification(req.body.notificationPayload)
+    // await newNotification.save()
 
     res.send({
       message: 'Blog liked successfully',
       data: newLike,
+      success: true,
+    })
+  } catch (error) {
+    res.send({
+      error: error.message,
+      success: false,
+    })
+  }
+})
+
+// unlike a blog
+router.post('/unlike-blog', authMiddleware, async (req, res) => {
+  try {
+    // delete like from likes collection
+    await Like.findOneAndDelete(req.body)
+
+    // decrement likes count in blog document
+    await Blog.findByIdAndUpdate(req.body.blog, {
+      $inc: { likesCount: -1 },
+    })
+
+    // add notification to notifications collection
+    // const newNotification = new Notification(req.body.notificationPayload);
+    // await newNotification.save();
+
+    res.send({
+      message: 'Blog unliked successfully',
+      success: true,
+    })
+  } catch (error) {
+    res.send({
+      error: error.message,
+      success: false,
+    })
+  }
+})
+
+// get all likes of a blog
+router.get('/get-all-likes-of-blog/:id', async (req, res) => {
+  try {
+    const likes = await Like.find({ blog: req.params.id }).populate('user')
+    res.send({
+      message: 'Likes fetched successfully',
+      data: likes,
       success: true,
     })
   } catch (error) {
