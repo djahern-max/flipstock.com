@@ -9,12 +9,21 @@ import ReactHtmlParser from 'react-html-parser'
 import draftToHtml from 'draftjs-to-html'
 import moment from 'moment'
 import {
+  AddComment,
+  GetAllCommentsOfBlog,
   LikeBlog,
   GetAllLikesOfBlog,
   UnlikeBlog,
 } from '../../apicalls/blogActions'
+import Comment from './Comment'
 
 function BlogDescription() {
+  const [comments = [], setComments = []] = useState([])
+  const [showComments = false, setShowComments = false] = useState(true)
+
+  const [showShare = false, setShowShare = false] = useState(false)
+  const [showAddComment = false, setShowAddComment = false] = useState(false)
+  const [comment = '', setComment = ''] = useState('')
   const [isAlreadyLiked, setIsAlreadyLiked] = useState(false)
   const [likes = [], setLikes = []] = useState([])
   const [blog, setBlog] = useState(null)
@@ -46,12 +55,16 @@ function BlogDescription() {
       dispatch(ShowLoading())
       const response = await GetBlogById(id)
       const likesResponse = await GetAllLikesOfBlog(id)
+      const commentsResponse = await GetAllCommentsOfBlog(id)
       if (likesResponse.success) {
         setLikes(likesResponse.data)
         const isLiked = likesResponse.data.find(
           (like) => like.user._id === currentUser._id
         )
         setIsAlreadyLiked(isLiked)
+      }
+      if (commentsResponse.success) {
+        setComments(commentsResponse.data)
       }
 
       if (response.success) {
@@ -84,6 +97,33 @@ function BlogDescription() {
       if (response.success) {
         getData()
         setIsAlreadyLiked(!isAlreadyLiked)
+      } else {
+        toast.error(response.message)
+      }
+      dispatch(HideLoading())
+    } catch (error) {
+      dispatch(HideLoading())
+      toast.error(error.message)
+    }
+  }
+
+  const addComment = async () => {
+    try {
+      dispatch(ShowLoading())
+      const response = await AddComment({
+        blog: blog?._id,
+        user: currentUser._id,
+        comment,
+        // notificationPayload: {
+        //   user: blog?.user?._id,
+        //   title: `${currentUser?.name} commented on your blog ${blog?.title}`,
+        //   onClick: `/blog/${blog?._id}`,
+        // },
+      })
+      if (response.success) {
+        getData()
+        setComment('')
+        setShowAddComment(false)
       } else {
         toast.error(response.message)
       }
@@ -141,21 +181,67 @@ function BlogDescription() {
               <i class='ri-chat-1-line'></i>
               <span>{blog.commentsCount}</span>
             </div>
+
+            <div
+              className='flex gap-1 items-center cursor-pointer'
+              onClick={() => {
+                setShowShare(true)
+                setShowComments(false)
+              }}
+            ></div>
             <div className='flex gap-1 items-center cursor-pointer'>
               <i class='ri-share-forward-line'></i>
               <span>{blog.sharesCount}</span>
             </div>
           </div>
         </div>
-
         <hr />
+        <div>
+          {!showAddComment && !showShare && (
+            <div className='flex justify-end underline cursor-pointer'>
+              <h1 onClick={() => setShowAddComment(!showAddComment)}>
+                Add Comment
+              </h1>
+            </div>
+          )}
+          {showAddComment && (
+            <div className='flex flex-col gap-5 shadow p-5 border'>
+              <textarea
+                rows={4}
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
+              />
+              <div className='flex justify-end gap-5'>
+                <Button
+                  title='Cancel'
+                  onClick={() => setShowAddComment(false)}
+                  variant='primary-outlined'
+                />
+                <Button title='Add Comment' onClick={addComment} />
+              </div>
+            </div>
+          )}
+
+          {showComments && (
+            <div className='flex flex-col gap-5 mt-5'>
+              {comments.map((comment) => (
+                <Comment comment={comment} getData={getData} />
+              ))}
+            </div>
+          )}
+
+          {/* {showShare && (
+            <Share
+              blog={blog}
+              setShowShare={setShowShare}
+              setShowComments={setShowComments}
+              getData={getData}
+            />
+          )} */}
+        </div>
       </div>
     )
   )
-}
-
-{
-  /* <h1>{blog?.content}</h1> */
 }
 
 export default BlogDescription

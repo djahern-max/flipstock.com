@@ -79,4 +79,51 @@ router.get('/get-all-likes-of-blog/:id', async (req, res) => {
   }
 })
 
+// add a comment
+router.post('/add-comment', authMiddleware, async (req, res) => {
+  try {
+    const newComment = new Comment(req.body)
+    await newComment.save()
+
+    // increment comments count in blog document
+    await Blog.findByIdAndUpdate(req.body.blog, {
+      $inc: { commentsCount: 1 },
+    })
+
+    // add notification to notifications collection
+    // const newNotification = new Notification(req.body.notificationPayload)
+    // await newNotification.save()
+
+    res.send({
+      message: 'Comment added successfully',
+      data: newComment,
+      success: true,
+    })
+  } catch (error) {
+    res.send({
+      error: error.message,
+      success: false,
+    })
+  }
+})
+
+// get all comments of a blog
+router.get('/get-all-comments-of-blog/:id', async (req, res) => {
+  try {
+    const comments = await Comment.find({ blog: req.params.id })
+      .populate('user')
+      .sort({ createdAt: -1 })
+    res.send({
+      message: 'Comments fetched successfully',
+      data: comments,
+      success: true,
+    })
+  } catch (error) {
+    res.send({
+      error: error.message,
+      success: false,
+    })
+  }
+})
+
 module.exports = router
