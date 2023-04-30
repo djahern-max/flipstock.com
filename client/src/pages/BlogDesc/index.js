@@ -16,6 +16,7 @@ import {
   UnlikeBlog,
 } from '../../apicalls/blogActions'
 import Comment from './Comment'
+import Share from './Share'
 
 function BlogDescription() {
   const [comments = [], setComments = []] = useState([])
@@ -140,10 +141,8 @@ function BlogDescription() {
 
   return (
     blog && (
-      ///***NEEDS UPDATE  currentUser?._id === blog?.user?._id &&  ******///
-      // EDIT AND DELETE WEREN'T WORKING WITH THE ABOVE STATEMENT//
       <div className='p-2 flex flex-col gap-5'>
-        {
+        {currentUser?._id === blog?.user?._id && (
           <div className='flex justify-end gap-5'>
             <Button
               onClick={() => deleteBlog()}
@@ -155,16 +154,20 @@ function BlogDescription() {
               title='Edit'
             />
           </div>
-        }
+        )}
         <h1 className='text-2xl font-bold text-primary'>{blog?.title}</h1>
         <hr />
         <h1>{blog?.description}</h1>
         <div>{ReactHtmlParser(draftToHtml(JSON.parse(blog?.content)))}</div>
+
         <hr />
+
         <div className='flex justify-between items-center'>
           <div>
-            {/* <h1>Posted By: {blog.user.name}</h1> */}
-            <h1>Posted: {moment(blog.createdAt).fromNow()}</h1>
+            <h1>Posted By: {blog.user.name}</h1>
+            <h1>
+              Posted On : {moment(blog.createdAt).format('DD-MM-YYYY hh:mm:ss')}
+            </h1>
           </div>
           <div className='flex gap-5 items-center'>
             <div
@@ -181,21 +184,19 @@ function BlogDescription() {
               <i class='ri-chat-1-line'></i>
               <span>{blog.commentsCount}</span>
             </div>
-
             <div
               className='flex gap-1 items-center cursor-pointer'
               onClick={() => {
                 setShowShare(true)
                 setShowComments(false)
               }}
-            ></div>
-            <div className='flex gap-1 items-center cursor-pointer'>
+            >
               <i class='ri-share-forward-line'></i>
               <span>{blog.sharesCount}</span>
             </div>
           </div>
         </div>
-        <hr />
+
         <div>
           {!showAddComment && !showShare && (
             <div className='flex justify-end underline cursor-pointer'>
@@ -230,14 +231,14 @@ function BlogDescription() {
             </div>
           )}
 
-          {/* {showShare && (
+          {showShare && (
             <Share
               blog={blog}
               setShowShare={setShowShare}
-              setShowComments={setShowComments}
-              getData={getData}
+              // setShowComments={setShowComments}
+              // getData={getData}
             />
-          )} */}
+          )}
         </div>
       </div>
     )

@@ -98,4 +98,33 @@ router.get('/getuser', authMiddleware, async (req, res) => {
   }
 })
 
+// search for a user
+router.post('/search-users', authMiddleware, async (req, res) => {
+  try {
+    const searchText = req.body.searchText
+
+    // search for users with the given search text in their name
+    const users = await User.find({
+      name: {
+        $regex: searchText,
+        $options: 'i',
+      },
+      _id: {
+        $ne: req.body.userId,
+      },
+    })
+
+    res.send({
+      success: true,
+      message: 'Users fetched successfully',
+      data: users,
+    })
+  } catch (error) {
+    res.send({
+      success: false,
+      message: error.message,
+    })
+  }
+})
+
 module.exports = router

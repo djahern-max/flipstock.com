@@ -31,3 +31,16 @@ export const GetUser = async () => {
     throw error || error.response.data
   }
 }
+
+// search users
+
+export const SearchUsers = async (searchText) => {
+  try {
+    const response = await axiosInstance.post(`/api/users/search-users`, {
+      searchText,
+    })
+    return response.data
+  } catch (error) {
+    throw error || error.response.data
+  }
+}
