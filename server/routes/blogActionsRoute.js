@@ -4,7 +4,7 @@ const Comment = require('../models/commentsModel')
 const router = require('express').Router()
 const authMiddleware = require('../middlewares/authMiddleware')
 const Blog = require('../models/blogsModel')
-// const Notification = require('../models/notificationsModel')
+const Notification = require('../models/notificationsModel')
 
 // like a blog
 router.post('/like-blog', authMiddleware, async (req, res) => {
@@ -19,8 +19,8 @@ router.post('/like-blog', authMiddleware, async (req, res) => {
     })
 
     // add notification to notifications collection
-    // const newNotification = new Notification(req.body.notificationPayload)
-    // await newNotification.save()
+    const newNotification = new Notification(req.body.notificationPayload)
+    await newNotification.save()
 
     res.send({
       message: 'Blog liked successfully',
@@ -47,8 +47,8 @@ router.post('/unlike-blog', authMiddleware, async (req, res) => {
     })
 
     // add notification to notifications collection
-    // const newNotification = new Notification(req.body.notificationPayload);
-    // await newNotification.save();
+    const newNotification = new Notification(req.body.notificationPayload)
+    await newNotification.save()
 
     res.send({
       message: 'Blog unliked successfully',
@@ -91,8 +91,8 @@ router.post('/add-comment', authMiddleware, async (req, res) => {
     })
 
     // add notification to notifications collection
-    // const newNotification = new Notification(req.body.notificationPayload)
-    // await newNotification.save()
+    const newNotification = new Notification(req.body.notificationPayload)
+    await newNotification.save()
 
     res.send({
       message: 'Comment added successfully',
@@ -126,4 +126,69 @@ router.get('/get-all-comments-of-blog/:id', async (req, res) => {
   }
 })
 
+// delete a comment
+router.post('/delete-comment', authMiddleware, async (req, res) => {
+  try {
+    await Comment.findByIdAndDelete(req.body.commentId)
+
+    // decrement comments count in blog document
+    await Blog.findByIdAndUpdate(req.body.blogId, {
+      $inc: { commentsCount: -1 },
+    })
+
+    res.send({
+      message: 'Comment deleted successfully',
+      success: true,
+    })
+  } catch (error) {
+    res.send({
+      error: error.message,
+      success: false,
+    })
+  }
+})
+
+// share a blog
+router.post('/share-blog', authMiddleware, async (req, res) => {
+  try {
+    const { selectedUsers, blog, sender, senderName } = req.body
+
+    // share blog to all selected users
+    for (let i = 0; i < selectedUsers.length; i++) {
+      const newShare = new Share({
+        blog,
+        sender,
+        receiver: selectedUsers[i],
+      })
+      await newShare.save()
+    }
+
+    // increment shares count in blog document
+    await Blog.findByIdAndUpdate(blog, {
+      $inc: { sharesCount: 1 },
+    })
+
+    // add notification to notifications collection
+
+    for (let i = 0; i < selectedUsers.length; i++) {
+      const newNotification = new Notification({
+        user: selectedUsers[i],
+        title: `${senderName} shared a blog with you`,
+        read: false,
+        onClick: `/blog-desc/${blog}`,
+      })
+      await newNotification.save()
+    }
+
+    res.send({
+      message: 'Blog shared successfully',
+      success: true,
+    })
+  } catch (error) {
+    res.send({
+      error: error.message,
+      success: false,
+    })
+  }
+})
 module.exports = router

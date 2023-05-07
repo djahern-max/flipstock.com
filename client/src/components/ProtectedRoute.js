@@ -51,7 +51,10 @@ function ProtectedRoute({ children }) {
             Flipstock.com
           </h1>
           <div className='bg-white rounded p-2 flex gap-2 items-center font-semibold text-primary'>
-            <h1 className='underline uppercase text-sm cursor-pointer'>
+            <h1
+              className='underline uppercase text-sm cursor-pointer'
+              onClick={() => navigate('/profile')}
+            >
               {currentUser.name}
             </h1>
             <i className='ri-notification-line cursor-pointer'></i>

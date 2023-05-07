@@ -75,3 +75,16 @@ export const DeleteComment = async (payload) => {
     return error.response.data
   }
 }
+
+// share a blog
+export const ShareBlog = async (payload) => {
+  try {
+    const response = await axiosInstance.post(
+      '/api/blog-actions/share-blog',
+      payload
+    )
+    return response.data
+  } catch (error) {
+    return error.response.data
+  }
+}

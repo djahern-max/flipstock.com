@@ -8,6 +8,7 @@ import { useSelector } from 'react-redux'
 import Loader from './components/Loader'
 import AddEditBlog from './pages/AddEditBlog'
 import BlogDescription from './pages/BlogDesc'
+import Profile from './pages/Profile'
 
 function App() {
   const { loading } = useSelector((state) => state.loadersReducer)
@@ -49,6 +50,15 @@ function App() {
             element={
               <ProtectedRoute>
                 <AddEditBlog />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path='/profile'
+            element={
+              <ProtectedRoute>
+                <Profile />
               </ProtectedRoute>
             }
           />

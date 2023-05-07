@@ -11,8 +11,8 @@ import moment from 'moment'
 import {
   AddComment,
   GetAllCommentsOfBlog,
-  LikeBlog,
   GetAllLikesOfBlog,
+  LikeBlog,
   UnlikeBlog,
 } from '../../apicalls/blogActions'
 import Comment from './Comment'
@@ -28,13 +28,12 @@ function BlogDescription() {
   const [isAlreadyLiked, setIsAlreadyLiked] = useState(false)
   const [likes = [], setLikes = []] = useState([])
   const [blog, setBlog] = useState(null)
-  const { currentUser } = useSelector((state) => state.usersReducer)
-  // console.log(currentUser)
+  const { currentUser, socket } = useSelector((state) => state.usersReducer)
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const { id } = useParams()
 
-  const deleteBlog = async () => {
+  const deletBlog = async () => {
     try {
       dispatch(ShowLoading())
       const response = await DeleteBlog(id)
@@ -84,15 +83,36 @@ function BlogDescription() {
     try {
       dispatch(ShowLoading())
       let response = null
+
       if (isAlreadyLiked) {
+        socket.emit('newNotification', {
+          userId: blog?.user?._id,
+          title: `${currentUser?.name} unliked your blog ${blog?.title}`,
+        })
+
         response = await UnlikeBlog({
           blog: blog?._id,
           user: currentUser._id,
+          notificationPayload: {
+            user: blog?.user?._id,
+            title: `${currentUser?.name} unliked your blog ${blog?.title}`,
+            onClick: `/blog-desc/${blog?._id}`,
+          },
         })
       } else {
+        socket.emit('newNotification', {
+          userId: blog?.user?._id,
+          title: `${currentUser?.name} liked your blog ${blog?.title}`,
+        })
+
         response = await LikeBlog({
           blog: blog?._id,
           user: currentUser._id,
+          notificationPayload: {
+            user: blog?.user?._id,
+            title: `${currentUser?.name} liked your blog ${blog?.title}`,
+            onClick: `/blog-desc/${blog?._id}`,
+          },
         })
       }
       if (response.success) {
@@ -115,11 +135,11 @@ function BlogDescription() {
         blog: blog?._id,
         user: currentUser._id,
         comment,
-        // notificationPayload: {
-        //   user: blog?.user?._id,
-        //   title: `${currentUser?.name} commented on your blog ${blog?.title}`,
-        //   onClick: `/blog/${blog?._id}`,
-        // },
+        notificationPayload: {
+          user: blog?.user?._id,
+          title: `${currentUser?.name} commented on your blog ${blog?.title}`,
+          onClick: `/blog/${blog?._id}`,
+        },
       })
       if (response.success) {
         getData()
@@ -138,14 +158,13 @@ function BlogDescription() {
   useEffect(() => {
     getData()
   }, [])
-
   return (
     blog && (
       <div className='p-2 flex flex-col gap-5'>
         {currentUser?._id === blog?.user?._id && (
           <div className='flex justify-end gap-5'>
             <Button
-              onClick={() => deleteBlog()}
+              onClick={() => deletBlog()}
               title='Delete'
               variant='primary-outlined'
             />
@@ -235,8 +254,8 @@ function BlogDescription() {
             <Share
               blog={blog}
               setShowShare={setShowShare}
-              // setShowComments={setShowComments}
-              // getData={getData}
+              setShowComments={setShowComments}
+              getData={getData}
             />
           )}
         </div>
