@@ -1,9 +1,9 @@
 const router = require('express').Router()
 const Blog = require('../models/blogsModel')
 const authMiddleware = require('../middlewares/authMiddleware')
-// const Like = require("../models/likesModel");
-// const Comment = require("../models/commentsModel");
-// const Share = require("../models/sharesModel");
+const Like = require('../models/likesModel')
+const Comment = require('../models/commentsModel')
+const Share = require('../models/sharesModel')
 
 // add new blog
 router.post('/add-blog', authMiddleware, async (req, res) => {
@@ -88,5 +88,109 @@ router.delete('/delete-blog/:id', authMiddleware, async (req, res) => {
     })
   }
 })
+
+// get all blogs by user
+router.get('/get-all-blogs-by-user', authMiddleware, async (req, res) => {
+  try {
+    const blogs = await Blog.find({ user: req.body.userId }).sort({
+      createdAt: -1,
+    })
+    res.send({
+      message: 'Blogs fetched successfully',
+      data: blogs,
+      success: true,
+    })
+  } catch (error) {
+    res.send({
+      error: error.message,
+      success: false,
+    })
+  }
+})
+
+// get all blogs by liked by user
+router.get(
+  '/get-all-blogs-by-liked-by-user',
+  authMiddleware,
+  async (req, res) => {
+    try {
+      const likes = await Like.find({ user: req.body.userId }).populate({
+        path: 'blog',
+        populate: {
+          path: 'user',
+        },
+      })
+      res.send({
+        message: 'Blogs fetched successfully',
+        data: likes,
+        success: true,
+      })
+    } catch (error) {
+      res.send({
+        error: error.message,
+        success: false,
+      })
+    }
+  }
+)
+
+// get all blogs by commented by user
+router.get(
+  '/get-all-blogs-by-commented-by-user',
+  authMiddleware,
+  async (req, res) => {
+    try {
+      const blogs = await Comment.find({
+        user: req.body.userId,
+      }).populate({
+        path: 'blog',
+        populate: {
+          path: 'user',
+        },
+      })
+      res.send({
+        message: 'Blogs fetched successfully',
+        data: blogs,
+        success: true,
+      })
+    } catch (error) {
+      res.send({
+        error: error.message,
+        success: false,
+      })
+    }
+  }
+)
+
+// get all blogs by shared to user
+router.get(
+  '/get-all-blogs-by-shared-to-user',
+  authMiddleware,
+  async (req, res) => {
+    try {
+      const blogs = await Share.find({
+        receiver: req.body.userId,
+      })
+        .populate({
+          path: 'blog',
+          populate: {
+            path: 'user',
+          },
+        })
+        .populate('sender')
+        .sort({ createdAt: -1 })
+      res.send({
+        message: 'Blogs fetched successfully',
+        data: blogs,
+        success: true,
+      })
+    } catch (error) {
+      res.send({
+        error: error.message,
+        success: false,
+      })
+    }
+  }
+)
 
 module.exports = router
