@@ -9,6 +9,7 @@ import Loader from './components/Loader'
 import AddEditBlog from './pages/AddEditBlog'
 import BlogDescription from './pages/BlogDesc'
 import Profile from './pages/Profile'
+import Notifications from './pages/Notifications'
 
 function App() {
   const { loading } = useSelector((state) => state.loadersReducer)
@@ -59,6 +60,15 @@ function App() {
             element={
               <ProtectedRoute>
                 <Profile />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path='/notifications'
+            element={
+              <ProtectedRoute>
+                <Notifications />
               </ProtectedRoute>
             }
           />

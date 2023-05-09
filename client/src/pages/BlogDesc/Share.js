@@ -43,7 +43,7 @@ function Share({ blog, setShowShare, setShowComments, getData }) {
         blog,
         selectedUsers,
         sender: currentUser._id,
-        senderName: currentUser.name,
+        // senderName: currentUser.name,
       })
       if (response.success) {
         toast.success(response.message)

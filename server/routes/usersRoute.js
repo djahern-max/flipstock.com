@@ -3,6 +3,7 @@ const router = require('express').Router()
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const authMiddleware = require('../middlewares/authMiddleware')
+const Notification = require('../models/notificationsModel')
 
 // Register a new user
 router.post('/register', async (req, res) => {
@@ -118,6 +119,29 @@ router.post('/search-users', authMiddleware, async (req, res) => {
       success: true,
       message: 'Users fetched successfully',
       data: users,
+    })
+  } catch (error) {
+    res.send({
+      success: false,
+      message: error.message,
+    })
+  }
+})
+
+// get all notifications for a user
+
+router.get('/get-all-notifications', authMiddleware, async (req, res) => {
+  try {
+    const notifications = await Notification.find({
+      user: req.body.userId,
+    }).sort({
+      createdAt: -1,
+    })
+
+    res.send({
+      success: true,
+      message: 'Notifications fetched successfully',
+      data: notifications,
     })
   } catch (error) {
     res.send({

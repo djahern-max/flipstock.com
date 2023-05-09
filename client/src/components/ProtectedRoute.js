@@ -50,6 +50,7 @@ function ProtectedRoute({ children }) {
           >
             Flipstock.com
           </h1>
+
           <div className='bg-white rounded p-2 flex gap-2 items-center font-semibold text-primary'>
             <h1
               className='underline uppercase text-sm cursor-pointer'
@@ -57,7 +58,14 @@ function ProtectedRoute({ children }) {
             >
               {currentUser.name}
             </h1>
-            <i className='ri-notification-line cursor-pointer'></i>
+            <div
+              className='relative flex cursor-pointer'
+              onClick={() => navigate('/notifications')}
+            >
+              <i className='ri-notification-line cursor-pointer'></i>
+
+              <h1 className='p-2 h-5 w-5 bg-red-500 text-white  rounded-full text-[10px] flex items-center justify-center  -ml-1'></h1>
+            </div>
             <i
               className='ri-logout-circle-r-line ml-5 cursor-pointer'
               onClick={() => {
@@ -67,6 +75,7 @@ function ProtectedRoute({ children }) {
             ></i>
           </div>
         </div>
+
         <div className='mt-5 overflow-scroll h-[85vh]'>{children}</div>
       </div>
     )
