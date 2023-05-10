@@ -5,13 +5,12 @@ const usersSlice = createSlice({
   initialState: {
     currentUser: null,
     users: [],
-    // notifications: {
-    //   read: [],
-    //   unread: [],
-    // },
-
-    // socket: null,
-    // unreadCount: 0,
+    notifications: {
+      read: [],
+      unread: [],
+    },
+    socket: null,
+    unreadCount: 0,
   },
   reducers: {
     SetCurrentUser: (state, action) => {
@@ -20,23 +19,18 @@ const usersSlice = createSlice({
     SetAllUsers: (state, action) => {
       state.users = action.payload
     },
-    // SetNotifications: (state, action) => {
-    //   state.notifications = action.payload
-    // },
+    SetNotifications: (state, action) => {
+      state.notifications = action.payload
+    },
     // SetSocket: (state, action) => {
-    //   state.socket = action.payload
+    //   state.socket = action.payload;
     // },
     // SetUnreadCount: (state, action) => {
-    //   state.unreadCount = action.payload
+    //   state.unreadCount = action.payload;
     // },
   },
 })
 
-export const {
-  SetCurrentUser,
-  SetAllUsers,
-  //   SetNotifications,
-  //   SetSocket,
-  //   SetUnreadCount,
-} = usersSlice.actions
+export const { SetCurrentUser, SetAllUsers, SetNotifications } =
+  usersSlice.actions
 export default usersSlice.reducer
