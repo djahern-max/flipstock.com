@@ -22,15 +22,20 @@ const usersSlice = createSlice({
     SetNotifications: (state, action) => {
       state.notifications = action.payload
     },
-    // SetSocket: (state, action) => {
-    //   state.socket = action.payload;
-    // },
-    // SetUnreadCount: (state, action) => {
-    //   state.unreadCount = action.payload;
-    // },
+    SetSocket: (state, action) => {
+      state.socket = action.payload
+    },
+    SetUnreadCount: (state, action) => {
+      state.unreadCount = action.payload
+    },
   },
 })
 
-export const { SetCurrentUser, SetAllUsers, SetNotifications } =
-  usersSlice.actions
+export const {
+  SetCurrentUser,
+  SetAllUsers,
+  SetNotifications,
+  SetSocket,
+  SetUnreadCount,
+} = usersSlice.actions
 export default usersSlice.reducer

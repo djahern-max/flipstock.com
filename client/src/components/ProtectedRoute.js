@@ -5,10 +5,17 @@ import { useNavigate } from 'react-router-dom'
 import { GetAllNotifications } from '../apicalls/notifications'
 import { GetUser } from '../apicalls/users'
 import { HideLoading, ShowLoading } from '../redux/loadersSlice'
-import { SetCurrentUser, SetNotifications } from '../redux/usersSlice'
+import {
+  SetCurrentUser,
+  SetNotifications,
+  SetSocket,
+  SetUnreadCount,
+} from '../redux/usersSlice'
+import { io } from 'socket.io-client'
+const socket = io('http://localhost:3000')
 
 function ProtectedRoute({ children }) {
-  const { currentUser, notifications } = useSelector(
+  const { currentUser, notifications, unreadCount } = useSelector(
     (state) => state.usersReducer
   )
   const dispatch = useDispatch()
@@ -21,6 +28,7 @@ function ProtectedRoute({ children }) {
       const response = await GetUser()
       if (response.success) {
         dispatch(SetCurrentUser(response.data))
+        dispatch(SetSocket(socket))
         toast.success(response.message)
         const notificationsResponse = await GetAllNotifications()
         if (notificationsResponse.success) {
@@ -33,7 +41,7 @@ function ProtectedRoute({ children }) {
             ),
           }
           dispatch(SetNotifications(notificationsTemp))
-          // dispatch(SetUnreadCount(notificationsTemp.unread.length))
+          dispatch(SetUnreadCount(notificationsTemp.unread.length))
         }
       } else {
         localStorage.removeItem('token')
@@ -56,6 +64,16 @@ function ProtectedRoute({ children }) {
       navigate('/login')
     }
   }, [])
+
+  useEffect(() => {
+    if (currentUser) {
+      socket.emit('join', currentUser?._id)
+    }
+
+    socket.on('newNotification', (data) => {
+      toast((t) => dispatch(SetUnreadCount(unreadCount + 1)))
+    })
+  }, [currentUser])
   return (
     currentUser && (
       <div className='p-5'>
@@ -79,10 +97,11 @@ function ProtectedRoute({ children }) {
               onClick={() => navigate('/notifications')}
             >
               <i className='ri-notification-line cursor-pointer'></i>
-
-              <h1 className='p-2 h-5 w-5 bg-red-500 text-white  rounded-full text-[10px] flex items-center justify-center  -ml-1'>
-                {notifications.unread.length}
-              </h1>
+              {unreadCount > 0 && (
+                <h1 className='p-2 h-5 w-5 bg-red-500 text-white  rounded-full text-[10px] flex items-center justify-center  -ml-1'>
+                  {unreadCount}
+                </h1>
+              )}
             </div>
             <i
               className='ri-logout-circle-r-line ml-5 cursor-pointer'
@@ -99,4 +118,5 @@ function ProtectedRoute({ children }) {
     )
   )
 }
+
 export default ProtectedRoute

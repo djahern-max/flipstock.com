@@ -8,7 +8,7 @@ import {
 } from '../../apicalls/notifications'
 import Tabs from '../../components/Tabs'
 import { HideLoading, ShowLoading } from '../../redux/loadersSlice'
-import { SetNotifications } from '../../redux/usersSlice'
+import { SetNotifications, SetUnreadCount } from '../../redux/usersSlice'
 import Notification from './Notification'
 
 function Notifications() {
@@ -30,7 +30,7 @@ function Notifications() {
           ),
         }
         dispatch(SetNotifications(notificationsTemp))
-        // dispatch(SetUnreadCount(notificationsTemp.unread.length))
+        dispatch(SetUnreadCount(notificationsTemp.unread.length))
       }
 
       dispatch(HideLoading())

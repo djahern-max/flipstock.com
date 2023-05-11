@@ -32,18 +32,18 @@ function Share({ blog, setShowShare, setShowComments, getData }) {
     try {
       dispatch(ShowLoading())
 
-      // for (let i = 0; i < selectedUsers.length; i++) {
-      //   socket.emit('newNotification', {
-      //     userId: selectedUsers[i],
-      //     title: `${currentUser.name} shared a blog with you`,
-      //   })
-      // }
+      for (let i = 0; i < selectedUsers.length; i++) {
+        socket.emit('newNotification', {
+          userId: selectedUsers[i],
+          title: `${currentUser.name} shared a blog with you`,
+        })
+      }
 
       const response = await ShareBlog({
         blog,
         selectedUsers,
         sender: currentUser._id,
-        // senderName: currentUser.name,
+        senderName: currentUser.name,
       })
       if (response.success) {
         toast.success(response.message)
