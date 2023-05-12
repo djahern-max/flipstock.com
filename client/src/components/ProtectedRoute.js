@@ -12,15 +12,13 @@ import {
   SetUnreadCount,
 } from '../redux/usersSlice'
 import { io } from 'socket.io-client'
-const socket = io('http://localhost:3000')
+const socket = io('https://sheyblogs-udemy.onrender.com/')
 
 function ProtectedRoute({ children }) {
   const { currentUser, notifications, unreadCount } = useSelector(
     (state) => state.usersReducer
   )
   const dispatch = useDispatch()
-  // const [user, setUser] = React.useState(null)
-
   const navigate = useNavigate()
   const getUser = async () => {
     try {
@@ -29,7 +27,6 @@ function ProtectedRoute({ children }) {
       if (response.success) {
         dispatch(SetCurrentUser(response.data))
         dispatch(SetSocket(socket))
-        toast.success(response.message)
         const notificationsResponse = await GetAllNotifications()
         if (notificationsResponse.success) {
           const notificationsTemp = {
@@ -70,12 +67,15 @@ function ProtectedRoute({ children }) {
       socket.emit('join', currentUser?._id)
     }
 
-    socket.on('newNotification', (data) => {
+    socket.off('newNotification').on('newNotification', (data) => {
       const audio = new Audio('/notificationSound.mp3')
       audio.play()
-      toast((t) => dispatch(SetUnreadCount(unreadCount + 1)))
+      dispatch(SetUnreadCount(unreadCount + 1))
+
+      // play notification sound
     })
   }, [currentUser])
+
   return (
     currentUser && (
       <div className='p-5'>
@@ -84,7 +84,7 @@ function ProtectedRoute({ children }) {
             className='text-white text-2xl font-bold uppercase cursor-pointer'
             onClick={() => navigate('/')}
           >
-            Flipstock.com
+            FLIPSTOCK.COM
           </h1>
 
           <div className='bg-white rounded p-2 flex gap-2 items-center font-semibold text-primary'>

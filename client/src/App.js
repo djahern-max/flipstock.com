@@ -27,7 +27,6 @@ function App() {
               </ProtectedRoute>
             }
           />
-
           <Route
             path='/add-blog'
             element={
@@ -36,7 +35,6 @@ function App() {
               </ProtectedRoute>
             }
           />
-
           <Route
             path='/blog-desc/:id'
             element={
@@ -45,7 +43,6 @@ function App() {
               </ProtectedRoute>
             }
           />
-
           <Route
             path='/edit-blog/:id'
             element={
@@ -54,7 +51,6 @@ function App() {
               </ProtectedRoute>
             }
           />
-
           <Route
             path='/profile'
             element={
@@ -63,7 +59,6 @@ function App() {
               </ProtectedRoute>
             }
           />
-
           <Route
             path='/notifications'
             element={
@@ -72,7 +67,6 @@ function App() {
               </ProtectedRoute>
             }
           />
-
           <Route path='/login' element={<Login />} />
           <Route path='/register' element={<Register />} />
         </Routes>

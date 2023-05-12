@@ -1,14 +1,14 @@
 import React, { useEffect } from 'react'
-import { Editor } from 'react-draft-wysiwyg'
 import './../../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
+import { Editor } from 'react-draft-wysiwyg'
+
 import { EditorState, convertToRaw, convertFromRaw } from 'draft-js'
 import Button from '../../components/Button'
 import { useDispatch, useSelector } from 'react-redux'
+import { AddNewBlog, GetBlogById, UpdateBlog } from '../../apicalls/blogs'
 import { toast } from 'react-hot-toast'
 import { HideLoading, ShowLoading } from '../../redux/loadersSlice'
 import { useNavigate, useParams } from 'react-router-dom'
-import { AddNewBlog, GetBlogById, UpdateBlog } from '../../apicalls/blogs'
-import draftToHtml from 'draftjs-to-html'
 
 function AddEditBlog() {
   const params = useParams()
@@ -23,13 +23,6 @@ function AddEditBlog() {
     canComment: false,
     canLike: false,
   })
-
-  // const onSave = async () => {
-  //   blog.content = blog.content.getCurrentContent()
-  //   blog.content = JSON.stringify(convertToRaw(blog.content))
-  //   blog.user = currentUser._id
-  //   console.log(blog)
-  // }
 
   const onSave = async () => {
     try {
@@ -100,6 +93,7 @@ function AddEditBlog() {
           {params.id ? 'Edit Blog' : 'Add New Blog'}
         </h1>
       </div>
+
       <div className='flex flex-col gap-5 mt-5'>
         <input
           type='text'
@@ -131,6 +125,7 @@ function AddEditBlog() {
             }
           />
         </div>
+
         <div className='flex gap-5'>
           <div className='flex items-center gap-1'>
             <input

@@ -162,6 +162,37 @@ router.get(
   }
 )
 
+// get all blogs by shared by user
+router.get(
+  '/get-all-blogs-by-shared-by-user',
+  authMiddleware,
+  async (req, res) => {
+    try {
+      const blogs = await Share.find({
+        sender: req.body.userId,
+      })
+        .populate({
+          path: 'blog',
+          populate: {
+            path: 'user',
+          },
+        })
+        .populate('receiver')
+        .sort({ createdAt: -1 })
+      res.send({
+        message: 'Blogs fetched successfully',
+        data: blogs,
+        success: true,
+      })
+    } catch (error) {
+      res.send({
+        error: error.message,
+        success: false,
+      })
+    }
+  }
+)
+
 // get all blogs by shared to user
 router.get(
   '/get-all-blogs-by-shared-to-user',
@@ -192,5 +223,4 @@ router.get(
     }
   }
 )
-
 module.exports = router

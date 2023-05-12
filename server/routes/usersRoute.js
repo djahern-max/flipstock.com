@@ -49,6 +49,7 @@ router.post('/login', async (req, res) => {
         message: 'User does not exist',
       })
     }
+
     // check if the password is correct
     const validPassword = await bcrypt.compare(req.body.password, user.password)
     if (!validPassword) {
@@ -68,6 +69,7 @@ router.post('/login', async (req, res) => {
         expiresIn: '1d',
       }
     )
+
     // send the token to the client
     res.send({
       success: true,
@@ -150,5 +152,39 @@ router.get('/get-all-notifications', authMiddleware, async (req, res) => {
     })
   }
 })
+
+// mark all notifications as read
+router.post(
+  '/mark-all-notifications-as-read',
+  authMiddleware,
+  async (req, res) => {
+    try {
+      await Notification.updateMany(
+        {
+          user: req.body.userId,
+        },
+        {
+          $set: {
+            read: true,
+          },
+        }
+      )
+
+      const updatedNotifications = await Notification.find({
+        user: req.body.userId,
+      }).sort({ createdAt: -1 })
+      res.send({
+        success: true,
+        message: 'Notifications marked as read successfully',
+        data: updatedNotifications,
+      })
+    } catch (error) {
+      res.send({
+        success: false,
+        message: error.message,
+      })
+    }
+  }
+)
 
 module.exports = router

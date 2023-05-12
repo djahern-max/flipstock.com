@@ -71,7 +71,7 @@ function Notifications() {
             unread: response.data.filter((notification) => !notification.read),
           })
         )
-        // dispatch(SetUnreadCount(0))
+        dispatch(SetUnreadCount(0))
       }
       dispatch(HideLoading())
     } catch (error) {

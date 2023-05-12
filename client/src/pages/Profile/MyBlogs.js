@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import Button from '../../components/Button'
 import { toast } from 'react-hot-toast'
@@ -28,7 +28,7 @@ function MyBlogs() {
     }
   }
 
-  const deleteBlog = async (id) => {
+  const deletBlog = async (id) => {
     try {
       dispatch(ShowLoading())
       const response = await DeleteBlog(id)
@@ -61,7 +61,7 @@ function MyBlogs() {
           {blogs.map((blog) => (
             <>
               <h1>{blog.title}</h1>
-              <h1>{moment(blog.createdAt).format('MM-DD-YYYY HH:mm')}</h1>
+              <h1>{moment(blog.createdAt).format('DD-MM-YYYY HH:mm')}</h1>
               <div className='flex gap-2'>
                 <Button
                   title='Edit'
@@ -71,7 +71,7 @@ function MyBlogs() {
                 <Button
                   title='Delete'
                   variant='primary-outlined'
-                  onClick={() => deleteBlog(blog._id)}
+                  onClick={() => deletBlog(blog._id)}
                 />
               </div>
               <div className='col-span-3'>
