@@ -71,6 +71,8 @@ function ProtectedRoute({ children }) {
     }
 
     socket.on('newNotification', (data) => {
+      const audio = new Audio('/notificationSound.mp3')
+      audio.play()
       toast((t) => dispatch(SetUnreadCount(unreadCount + 1)))
     })
   }, [currentUser])
