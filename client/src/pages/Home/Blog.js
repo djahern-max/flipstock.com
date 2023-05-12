@@ -18,7 +18,7 @@ function Blog({ blog }) {
 
       <div className='flex justify-between items-center'>
         <div>
-          {/* <h1>Posted By: {blog.user.name}</h1> */}
+          <h1>Posted By: {blog.user.name}</h1>
           <h1>Posted: {moment(blog.createdAt).fromNow()}</h1>
         </div>
         <div className='flex gap-5 items-center'>
