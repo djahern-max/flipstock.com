@@ -1,0 +1,6 @@
+{
+    "mongo_url": "mongodb+srv://djahern:Guitar0123@cluster0.cq0hxvk.mongodb.net/?",
+    "jwtSecret": "flipstock",
+    "retryWrites": "=true&w=majority"
+  }
+  
