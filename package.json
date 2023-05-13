@@ -2,6 +2,9 @@
   "name": "flipstock.com",
   "version": "1.0.0",
   "description": "Stock Market Strategy Communication Tool",
+  "engines": {
+    "node": "19.8.1"
+  },
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
