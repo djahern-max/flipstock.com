@@ -16,16 +16,16 @@ app.use('/api/blogs', blogsRoute)
 app.use('/api/blog-actions', blogActionsRoute)
 
 //Serve static assets in production
-if (
-  process.env.NODE_ENV === 'production' ||
-  process.env.NODE_ENV === 'staging'
-) {
-  app.use(express.static('client/build'))
+// if (
+//   process.env.NODE_ENV === 'production' ||
+//   process.env.NODE_ENV === 'staging'
+// ) {
+//   app.use(express.static('client/build'))
 
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'client/build/index.html'))
-  })
-}
+//   app.get('*', (req, res) => {
+//     res.sendFile(path.join(__dirname, 'client/build/index.html'))
+//   })
+// }
 
 const port = process.env.PORT || 5000
 const server = require('http').createServer(app)
@@ -52,12 +52,12 @@ io.on('connection', (socket) => {
 // const path = require('path')
 // __dirname = path.resolve()
 // render deployment
-// if (process.env.NODE_ENV === 'production') {
-//   app.use(express.static(path.join(__dirname, '/client/build')))
-//   app.get('*', (req, res) => {
-//     res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'))
-//   })
-// }
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, '/client/build')))
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'))
+  })
+}
 
 server.listen(port, () => {
   console.log(`Server is running on port: ${port}`)
