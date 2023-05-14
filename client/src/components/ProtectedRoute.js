@@ -12,7 +12,9 @@ import {
   SetUnreadCount,
 } from '../redux/usersSlice'
 import { io } from 'socket.io-client'
-const socket = io('https://sheyblogs-udemy.onrender.com/')
+// const socket = io('http://localhost:5000')
+// const socket = io('https://flipstock.herokuapp.com/')
+const socket = io('flipstock.onrender.com')
 
 function ProtectedRoute({ children }) {
   const { currentUser, notifications, unreadCount } = useSelector(
