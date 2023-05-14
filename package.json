@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "Stock Market Strategy Communication Tool",
   "engines": {
-    "node": "19.8.1"
+    "node": "19.8.1",
+    "npm": "7.5.4"
   },
   "main": "index.js",
   "scripts": {
