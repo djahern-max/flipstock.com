@@ -6,7 +6,7 @@ function Button({ title, onClick, variant = 'primary-contained', disabled }) {
       onClick={onClick}
       disabled={disabled}
       className={`
-       px-5 h-10
+       px-5 h-12
        ${variant === 'primary-contained' && 'bg-primary text-white'} 
        ${
          variant === 'primary-outlined' &&
