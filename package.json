@@ -2,10 +2,7 @@
   "name": "flipstock.com",
   "version": "1.0.0",
   "description": "Stock Market Strategy Communication Tool",
-  "engines": {
-    "node": "19.8.1",
-    "npm": "7.5.4"
-  },
+ 
   "main": "index.js",
   "scripts": {
     "build": "cd server && npm install  && cd ../client && npm install && npm run build",
