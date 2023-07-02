@@ -86,7 +86,7 @@ function ProtectedRoute({ children }) {
             className='text-white text-2xl font-bold uppercase cursor-pointer'
             onClick={() => navigate('/')}
           >
-            FLIPSTOCK.COM
+            AI News
           </h1>
 
           <div className='bg-white rounded p-2 flex gap-2 items-center font-semibold text-primary'>
