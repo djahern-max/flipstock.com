@@ -37,11 +37,11 @@ function Home() {
     <div>
       <div className='flex justify-between'>
         <h1 className='text-primary uppercase text-2xl font-bold'>
-          Bonjour {currentUser.name} !
+          Hey There, {currentUser.name} !
         </h1>
 
         <Button
-          title='Add Blog'
+          title='Create'
           variant='primary-outlined'
           onClick={() => navigate('/add-blog')}
         />

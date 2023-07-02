@@ -89,7 +89,7 @@ function ProtectedRoute({ children }) {
             AI News
           </h1>
 
-          <div className='bg-white rounded p-2 flex gap-2 items-center font-semibold text-primary'>
+          <div className='bg-white rounded p-1 flex gap-1 items-center font-semibold text-primary'>
             <h1
               className='underline uppercase text-sm cursor-pointer'
               onClick={() => navigate('/profile')}
