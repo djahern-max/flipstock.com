@@ -86,7 +86,7 @@ function ProtectedRoute({ children }) {
             className='text-white text-2xl font-bold uppercase cursor-pointer'
             onClick={() => navigate('/')}
           >
-            AI News
+            AI News test
           </h1>
 
           <div className='bg-white rounded p-1 flex gap-1 items-center font-semibold text-primary'>
