@@ -82,12 +82,12 @@ function ProtectedRoute({ children }) {
     currentUser && (
       <div className='p-5'>
         <div className='bg-primary w-full p-5 justify-between flex rounded items-center'>
-          <h1
-            className='text-white text-2xl font-bold uppercase cursor-pointer'
+          <h3
+            className='text-white uppercase cursor-pointer'
             onClick={() => navigate('/')}
           >
             Flipstock
-          </h1>
+          </h3>
 
           <div className='bg-white rounded p-1 flex gap-1 items-center font-semibold text-primary'>
             <h1
