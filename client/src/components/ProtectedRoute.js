@@ -91,10 +91,10 @@ function ProtectedRoute({ children }) {
 
           <div className='bg-white rounded p-1 flex gap-1 items-center font-semibold text-primary'>
             <h1
-              className='underline uppercase text-sm cursor-pointer'
+              className='underline uppercase text-6px cursor-pointer'
               onClick={() => navigate('/profile')}
             >
-              Test{currentUser.name}
+              {currentUser.name}
             </h1>
             <div
               className='relative flex cursor-pointer'
