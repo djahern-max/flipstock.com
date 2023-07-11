@@ -36,8 +36,8 @@ function Home() {
   return (
     <div>
       <div className='flex justify-between'>
-        <h1 className='text-primary uppercase text-2xl font-bold'>
-          Hey There, {currentUser.name} !
+        <h1 className='text-primary uppercase'>
+          Welcome, {currentUser.name} !
         </h1>
 
         <Button
